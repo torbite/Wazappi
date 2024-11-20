@@ -7,5 +7,3 @@ button.addEventListener("click",function(){
     a += 1;
 })
 
-
-
