@@ -87,7 +87,8 @@ getMessagesButton.addEventListener("click", async function() {
     const messages = response["messages"];
     const length = messages.length;
     for(let i = 0; i < length; i++){
-        var message = messages[i];
+        var message = messages[i]["message"];
+        var user = messages[i]["username"];
         var id = `message${i}`
         var elm = document.getElementById(id)
         if(!elm){
@@ -95,7 +96,7 @@ getMessagesButton.addEventListener("click", async function() {
             elm.id = id
         }
         
-        elm.textContent = message;
+        elm.textContent = `${user} : ${message}`;
         document.body.appendChild(elm);
     }
 })

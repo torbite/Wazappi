@@ -50,8 +50,8 @@ def getMessages():
     error = checkForErrors(Users, login)
     if error:
         return jsonify(error)
-    messagesToSend = messages[login["username"]]
-    return jsonify({"messages" : messagesToSend})
+    send = messages[login["username"]]
+    return jsonify({"messages" : send})
 
 
 
@@ -69,8 +69,8 @@ def sendMessage():
     if error:
         return jsonify(error)
     
-    
-    messages[data["namePerson"]].insert(0, message)
+    send = {"username" : login["username"], "message" : message}
+    messages[data["namePerson"]].insert(0, send)
     
     return jsonify("message sent successfully!")
 
