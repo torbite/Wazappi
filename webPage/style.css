@@ -1,0 +1,75 @@
+body{
+    background-color: gray;
+}
+
+textarea{
+    border-color: black;
+    background-color: bisque;
+    border-width: 5px;
+    width: 200px;
+    height: 50px;
+}
+
+button{
+    border-color: black;
+    background-color: red;
+    border-width: 1px;
+    color: aqua;
+}
+
+label{
+    display: block;
+    font-size: 20px;
+}
+
+div{
+    width: 275px;
+    padding: 20px;
+    margin: 10px; 
+    border-radius: 10px; 
+    border: 2px solid black;
+}
+
+#SigninDiv{
+    background-color: blueviolet;
+    border-color: black;
+    position: absolute;
+    top: 50px;
+    left: 50px;
+}
+
+#LoginDiv{
+    background-color: lightblue;
+    border-color: black;
+    position: absolute;
+    top: 350px;
+    left: 50px;
+    
+}
+
+#SendMessageDiv{
+    background-color: green;
+    border-color: black;
+    position: absolute;
+    top: 50px;
+    left: 400px;
+    
+}
+
+#GetMessagesDiv{
+    background-color: orchid;
+    /* border-color: black; */
+    position: absolute;
+    top: 50px;
+    left: 750px;
+    
+}
+
+#MessagesDiv{
+    background-color: gainsboro;
+    border-color: black;
+    position: relative;
+    top: 10px;
+    left: 10px;
+
+}

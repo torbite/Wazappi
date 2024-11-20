@@ -3,27 +3,50 @@
     <link rel = "stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h1>Hello World</h1>
+    <h1>Messaging</h1>
     
     
-    <div>
+    <div id = "SigninDiv">
+        <h2>Sign Up</h2>
+        <label for="usernameSignIn">Username signup: </label>
         <textarea id="usernameSignIn"></textarea>
+
+        <label for="passwordSignIn">Password signup:</label>
         <textarea id="passwordSignIn"></textarea>
+
         <button id="SignInButton">Sign in</textarea>
     </div>
-    <div>
+    <div id = "LoginDiv">
+        <h2>Log In</h2>
+        <label for="usernamelogin">Username login:</label>
         <textarea id="usernamelogin"></textarea>
+
+        <label for="passwordlogin">Password login:</label>
         <textarea id="passwordlogin"></textarea>
+
         <button id="loginButton">Log in</textarea>
     </div>
-    <div>
-        <h2 id="text">Text</h2>
+    <div id = "SendMessageDiv">
+        <h2>Main UI </h2>
+
+        <h3 id = "userText">Username logged in: </h2>
+
+        <label for="usernameSend">User destined:</label>
         <textarea id="usernameSend"></textarea>
+
+        <label for="messageSpace">Message:</label>
         <textarea id="messageSpace"></textarea>
+
         <button id="sendButton">Send Message</button>
+
+        <h3 id="text">Text</h2>
     </div>
-    <div>
+    <div id = "GetMessagesDiv">
         <button id="getMessagesButton">Get Messages</button>
+        <div id = "MessagesDiv">
+            <h2>Messages: </h2>
+
+        </div>
     </div>
 
     <script src="script.js"></script>

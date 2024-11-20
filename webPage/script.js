@@ -9,10 +9,14 @@ const usernameLoginTextArea = document.getElementById("usernamelogin");
 const passwordLoginTextArea = document.getElementById("passwordlogin");
 const loginButton = document.getElementById("loginButton");
 
+const userText = document.getElementById("userText");
 const textArea = document.getElementById("text");
 const sendButton = document.getElementById("sendButton");
 const messageArea = document.getElementById("messageSpace");
 const usernameToSendTextArea = document.getElementById("usernameSend");
+
+const messagesDiv = document.getElementById("MessagesDiv");
+
 
 const getMessagesButton = document.getElementById("getMessagesButton");
 
@@ -34,9 +38,11 @@ SignInButton.addEventListener("click", async function(){
         loginUsername = usern;
         loginPassword = pass;
         login = {"username" : loginUsername, "password" : loginPassword};
+        updateUserText(login["username"]);
         textArea.textContent = "logged on";
     }
     else{
+        updateUserText("None");
         textArea.textContent = response;   
     }
 })
@@ -56,8 +62,11 @@ loginButton.addEventListener("click", async function(){
         loginPassword = pass;
         login = {"username" : loginUsername, "password" : loginPassword};
         textArea.textContent = "logged on";
+        userText.textContent = login["username"];
+        updateUserText(login["username"]);
     }
     else{
+        updateUserText("None");
         textArea.textContent = response;
     }
 })
@@ -86,18 +95,22 @@ getMessagesButton.addEventListener("click", async function() {
     console.log(response);
     const messages = response["messages"];
     const length = messages.length;
-    for(let i = 0; i < length; i++){
+    for(let i = 0; i < length && i < 13; i++){
         var message = messages[i]["message"];
         var user = messages[i]["username"];
         var id = `message${i}`
         var elm = document.getElementById(id)
         if(!elm){
-            elm = document.createElement("h2");
+            elm = document.createElement("h3");
             elm.id = id
         }
         
         elm.textContent = `${user} : ${message}`;
-        document.body.appendChild(elm);
+        elm.style.backgroundColor = "gray";
+        elm.style.borderWidth = 3;
+        elm.style.borderColor = "black";
+        // document.body.appendChild(elm);
+        messagesDiv.appendChild(elm)
     }
 })
 
@@ -138,3 +151,6 @@ async function apiPost(url, data) {
     }
 }
 
+function updateUserText(user){
+    userText.textContent = `Username logged in: ${user}`
+}
