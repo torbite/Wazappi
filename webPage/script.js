@@ -1,6 +1,6 @@
 // securityles chrome: open -na "Google Chrome" --args --disable-web-security --user-data-dir="/tmp/chrome_dev"
 
-const url = "http://127.0.0.1:5000"
+const url = "https://torbite.pythonanywhere.com"
 const usernameSignInTextArea = document.getElementById("usernameSignIn");
 const passwordSignInTextArea = document.getElementById("passwordSignIn");
 const SignInButton = document.getElementById("SignInButton");
