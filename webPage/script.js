@@ -10,17 +10,16 @@ const usernameLoginTextArea = document.getElementById("usernamelogin");
 const passwordLoginTextArea = document.getElementById("passwordlogin");
 const loginButton = document.getElementById("loginButton");
 
+
 const userText = document.getElementById("userText");
 const textArea = document.getElementById("text");
 const sendButton = document.getElementById("sendButton");
 const messageArea = document.getElementById("messageSpace");
 const usernameToSendTextArea = document.getElementById("usernameSend");
 
-const messagesDiv = document.getElementById("MessagesDiv");
-
 const usernamesText = document.getElementById("usernamesText");
 
-
+const messagesDiv = document.getElementById("MessagesDiv");
 const getMessagesButton = document.getElementById("getMessagesButton");
 
 
