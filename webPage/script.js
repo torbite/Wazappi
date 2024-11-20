@@ -23,7 +23,7 @@ const getMessagesButton = document.getElementById("getMessagesButton");
 
 let loginUsername;
 let loginPassword;
-let login = {}
+let login = {"username" : "None", "password" : "None"}
 
 SignInButton.addEventListener("click", async function(){
     const usern = usernameSignInTextArea.value;
@@ -87,31 +87,10 @@ sendButton.addEventListener("click", async function() {
     // textArea.textContent = response;
 })
 
-
+setInterval(checkForMessages, 1000);
 
 getMessagesButton.addEventListener("click", async function() {
-    const sendData = {"login" : login};
-    const response = await apiPost(`${url}/get`, sendData);
-    console.log(response);
-    const messages = response["messages"];
-    const length = messages.length;
-    for(let i = 0; i < length && i < 13; i++){
-        var message = messages[i]["message"];
-        var user = messages[i]["username"];
-        var id = `message${i}`
-        var elm = document.getElementById(id)
-        if(!elm){
-            elm = document.createElement("h3");
-            elm.id = id
-        }
-        
-        elm.textContent = `${user} : ${message}`;
-        elm.style.backgroundColor = "gray";
-        elm.style.borderWidth = 3;
-        elm.style.borderColor = "black";
-        // document.body.appendChild(elm);
-        messagesDiv.appendChild(elm)
-    }
+    await checkForMessages();
 })
 
 
@@ -153,4 +132,32 @@ async function apiPost(url, data) {
 
 function updateUserText(user){
     userText.textContent = `Username logged in: ${user}`
+}
+
+async function checkForMessages(){
+    if(login["username"] != "None"){
+        const sendData = {"login" : login};
+        const response = await apiPost(`${url}/get`, sendData);
+        console.log(response);
+        const messages = response["messages"];
+        const length = messages.length;
+        for(let i = 0; i < length && i < 13; i++){
+            var message = messages[i]["message"];
+            var user = messages[i]["username"];
+            var id = `message${i}`
+            var elm = document.getElementById(id)
+            if(!elm){
+                elm = document.createElement("h3");
+                elm.id = id
+            }
+            
+            elm.textContent = `${user} : ${message}`;
+            elm.style.backgroundColor = "gray";
+            elm.style.borderWidth = 3;
+            elm.style.borderColor = "black";
+            // document.body.appendChild(elm);
+            messagesDiv.appendChild(elm);
+        }
+    }
+    return "done";
 }
