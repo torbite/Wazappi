@@ -8,7 +8,8 @@ flask_cors.CORS(app)
 
 Users = {}
 messages = {}
-
+lastItem = 1
+keys = {}
 
 @app.route("/", methods=["GET"])
 def hello():
@@ -16,7 +17,7 @@ def hello():
 
 @app.route("/signup", methods=["POST"])
 def signup():
-    global Users
+    global Users, keys, lastItem
     """sign up to new person: {'username': 'JAMES', 'password' : '1234APcb'}"""
     newUser = request.json
     username = newUser["username"]
@@ -24,7 +25,9 @@ def signup():
     if username in Users:
         return jsonify("the user already exists!")
     Users[username] = password
-    messages[newUser["username"]] = []
+    keys[username] = lastItem
+    lastItem = lastItem * 2
+    # messages[newUser["username"]] = []
     return jsonify("ok")
 
 
@@ -43,14 +46,26 @@ def login():
 
 @app.route("/get", methods=["POST"])
 def getMessages():
-    global Users, messages
-    """Get all messages ever sent to you {'login' : {your login}"""
+    global Users, messages, keys
+    """Get all messages ever sent to you {'login' : {your login}, 'userToReceiveChat' : 'user'}"""
+    
     data = request.json
     login = data["login"]
     error = checkForErrors(Users, login)
     if error:
         return jsonify(error)
-    send = messages[login["username"]]
+    username = login['username']
+    userToReceiveChat = data["userToReceiveChat"]
+    if userToReceiveChat not in Users.keys():
+        return jsonify("There is no pesrson with that name")
+    key1 = keys[username]
+    key2 = keys[userToReceiveChat]
+    key = key1 + key2
+    if key not in messages.keys():
+        messages[key] = []
+    send = messages[key]
+    
+
     return jsonify({"messages" : send})
 
 
@@ -58,21 +73,37 @@ def getMessages():
 
 @app.route("/send", methods=["POST"])
 def sendMessage():
-    global Users, messages
+    global Users, messages, keys
     """Send message to the api. Format: {'message' : 'hi, just a test', 'login' : {your login}, 'namePerson' : 'carlos'}"""
 
     data = request.json
     login = data["login"]
     message = data["message"]
     error = checkForErrors(Users, login)
-    print(data["namePerson"] in messages)
+
+    userSend = data["namePerson"]
+    username = login["username"]
+
+    print(userSend in messages)
     if error:
         return jsonify(error)
     
-    send = {"username" : login["username"], "message" : message}
-    messages[data["namePerson"]].insert(0, send)
+    send = {"username" : username, "message" : message}
+    key1 = keys[username]
+    key2 = keys[userSend]
+    key = key1 + key2
+    if key not in messages.keys():
+        messages[key] = []
+    messages[key].insert(0, send)
     
     return jsonify("message sent successfully!")
+
+
+@app.route('/getAllUsers', methods=["GET"])
+def getAllUsers():
+    global Users, keys, messages
+    usernames = list(Users.keys())
+    return jsonify({'usernames' : usernames })
 
 
 def checkForErrors(Users, login):

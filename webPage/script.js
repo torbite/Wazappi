@@ -1,6 +1,7 @@
 // securityles chrome: open -na "Google Chrome" --args --disable-web-security --user-data-dir="/tmp/chrome_dev"
+// https://127.0.0.1:5000 and https://torbite.pythonanywhere.com
+const url = "http://127.0.0.1:5000"
 
-const url = "https://torbite.pythonanywhere.com"
 const usernameSignInTextArea = document.getElementById("usernameSignIn");
 const passwordSignInTextArea = document.getElementById("passwordSignIn");
 const SignInButton = document.getElementById("SignInButton");
@@ -16,6 +17,8 @@ const messageArea = document.getElementById("messageSpace");
 const usernameToSendTextArea = document.getElementById("usernameSend");
 
 const messagesDiv = document.getElementById("MessagesDiv");
+
+const usernamesText = document.getElementById("usernamesText");
 
 
 const getMessagesButton = document.getElementById("getMessagesButton");
@@ -88,6 +91,7 @@ sendButton.addEventListener("click", async function() {
 })
 
 setInterval(checkForMessages, 1000);
+setInterval(getUsers, 10000);
 
 getMessagesButton.addEventListener("click", async function() {
     await checkForMessages();
@@ -96,6 +100,51 @@ getMessagesButton.addEventListener("click", async function() {
 
 
 // -------- EXTRA FUNCIONTS -------- //
+
+async function getUsers(){
+    const response = await apiGet(`${url}/getAllUsers`);
+    usernames = response["usernames"]
+    console.log(usernames)
+    text = " "
+    for(var i =0; i < usernames.length; i ++){
+        text += `\n${usernames[i]},`
+    }
+    usernamesText.textContent = `Usernames: ${text}`
+}
+
+async function checkForMessages(){
+    const userToSend = usernameToSendTextArea.value;
+    const no = "There is no pesrson with that name";
+    if(login["username"] != "None"  && userToSend != ""){
+
+        const sendData = {"login" : login, 'userToReceiveChat' : userToSend};
+        const response = await apiPost(`${url}/get`, sendData);
+        if (response != no){
+            console.log(response);
+            const messages = response["messages"];
+            const length = messages.length;
+            for(let i = 0; i < length && i < 13; i++){
+                var message = messages[i]["message"];
+                var user = messages[i]["username"];
+                var id = `message${i}`;
+                var elm = document.getElementById(id);
+                if(!elm){
+                    elm = document.createElement("h3");
+                    elm.id = id;
+                }
+                
+                elm.textContent = `${user} : ${message}`;
+                elm.style.backgroundColor = "gray";
+                elm.style.borderWidth = 3;
+                elm.style.borderColor = "black";
+                // document.body.appendChild(elm);
+                messagesDiv.appendChild(elm);
+            }   
+        }
+    }
+    return "done";
+}
+
 
 async function apiGet(url) {
     try {
@@ -134,30 +183,4 @@ function updateUserText(user){
     userText.textContent = `Username logged in: ${user}`
 }
 
-async function checkForMessages(){
-    if(login["username"] != "None"){
-        const sendData = {"login" : login};
-        const response = await apiPost(`${url}/get`, sendData);
-        console.log(response);
-        const messages = response["messages"];
-        const length = messages.length;
-        for(let i = 0; i < length && i < 13; i++){
-            var message = messages[i]["message"];
-            var user = messages[i]["username"];
-            var id = `message${i}`
-            var elm = document.getElementById(id)
-            if(!elm){
-                elm = document.createElement("h3");
-                elm.id = id
-            }
-            
-            elm.textContent = `${user} : ${message}`;
-            elm.style.backgroundColor = "gray";
-            elm.style.borderWidth = 3;
-            elm.style.borderColor = "black";
-            // document.body.appendChild(elm);
-            messagesDiv.appendChild(elm);
-        }
-    }
-    return "done";
-}
+

@@ -77,7 +77,15 @@ div{
     background-color: gainsboro;
     border-color: black;
     position: relative;
-    top: 10px;
+    top: 30px;
     left: 10px;
 
+}
+
+#Usernames{
+    background-color: gainsboro;
+    border-color: black;
+    position: relative;
+    top: 400px;
+    left: 400px;
 }
