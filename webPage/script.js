@@ -23,6 +23,7 @@ loginButton.addEventListener("click", async function(){
         "password" : pass
     }
     const response = await apiPost(`${url}/signup`, data)
+    console.log(response);
     if (response == "ok"){
         loginUsername = usern
         loginPassword = pass
@@ -43,6 +44,7 @@ sendButton.addEventListener("click", async function() {
         const usernameToSend = usernameToSendTextArea.value;
         const data = {'message': sendMessage, "login" : login, "namePerson" : usernameToSend};
         const response = await apiPost(`${url}/send`, data);
+        console.log(response);
         textArea.textContent = response;
     }
 })
@@ -52,6 +54,7 @@ sendButton.addEventListener("click", async function() {
 getMessagesButton.addEventListener("click", async function() {
     const sendData = {"login" : login};
     const response = await apiPost(`${url}/get`, sendData);
+    console.log(response);
     const messages = response["messages"];
     const length = messages.length;
     for(let i = 0; i < length; i++){
@@ -79,7 +82,7 @@ async function apiGet(url) {
             throw new Error('Network response was not ok');
         }
         const data = await response;
-        console.log(data)
+        
         return data.json();
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -97,7 +100,7 @@ async function apiPost(url, data) {
             body: JSON.stringify(data)
         })
         const data_received = await response.json();
-        console.log("done")
+
         return data_received
     }
     catch (error){
