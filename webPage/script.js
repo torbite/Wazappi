@@ -2,6 +2,15 @@ const url = "http://127.0.0.1:5000"
 const usernameTextArea = document.getElementById("usernameLogin");
 const passwordTextArea = document.getElementById("passwordLogin");
 const loginButton = document.getElementById("loginButton");
+
+const textArea = document.getElementById("text");
+const sendButton = document.getElementById("sendButton");
+const messageArea = document.getElementById("messageSpace");
+const usernameToSendTextArea = document.getElementById("usernameSend");
+
+const getMessagesButton = document.getElementById("getMessagesButton");
+
+
 let loginUsername;
 let loginPassword;
 let login = {}
@@ -24,10 +33,7 @@ loginButton.addEventListener("click", async function(){
 
 
 
-const textArea = document.getElementById("text");
-const sendButton = document.getElementById("sendButton");
-const messageArea = document.getElementById("messageSpace");
-const usernameToSendTextArea = document.getElementById("usernameSend")
+
 
 
 sendButton.addEventListener("click", async function() {
@@ -37,8 +43,28 @@ sendButton.addEventListener("click", async function() {
         const usernameToSend = usernameToSendTextArea.value;
         const data = {'message': sendMessage, "login" : login, "namePerson" : usernameToSend};
         const response = await apiPost(`${url}/send`, data);
-        console.log(response)
         textArea.textContent = response;
+    }
+})
+
+
+
+getMessagesButton.addEventListener("click", async function() {
+    const sendData = {"login" : login};
+    const response = await apiPost(`${url}/get`, sendData);
+    const messages = response["messages"];
+    const length = messages.length;
+    for(let i = 0; i < length; i++){
+        var message = messages[i];
+        var id = `message${i}`
+        var elm = document.getElementById(id)
+        if(!elm){
+            elm = document.createElement("h2");
+            elm.id = id
+        }
+        
+        elm.textContent = message;
+        document.body.appendChild(elm);
     }
 })
 

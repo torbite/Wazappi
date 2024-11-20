@@ -26,6 +26,8 @@ def signup():
     except KeyError as e:
         return e
 
+
+
 @app.route("/get", methods=["POST"])
 def getMessages():
     global Users, messages
