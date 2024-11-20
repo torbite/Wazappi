@@ -1,6 +1,12 @@
+// securityles chrome: open -na "Google Chrome" --args --disable-web-security --user-data-dir="/tmp/chrome_dev"
+
 const url = "http://127.0.0.1:5000"
-const usernameTextArea = document.getElementById("usernameLogin");
-const passwordTextArea = document.getElementById("passwordLogin");
+const usernameSignInTextArea = document.getElementById("usernameSignIn");
+const passwordSignInTextArea = document.getElementById("passwordSignIn");
+const SignInButton = document.getElementById("SignInButton");
+
+const usernameLoginTextArea = document.getElementById("usernamelogin");
+const passwordLoginTextArea = document.getElementById("passwordlogin");
 const loginButton = document.getElementById("loginButton");
 
 const textArea = document.getElementById("text");
@@ -15,9 +21,9 @@ let loginUsername;
 let loginPassword;
 let login = {}
 
-loginButton.addEventListener("click", async function(){
-    const usern = usernameTextArea.value;
-    const pass = passwordTextArea.value;
+SignInButton.addEventListener("click", async function(){
+    const usern = usernameSignInTextArea.value;
+    const pass = passwordSignInTextArea.value;
     const data = {
         "username" : usern,
         "password" : pass
@@ -25,14 +31,36 @@ loginButton.addEventListener("click", async function(){
     const response = await apiPost(`${url}/signup`, data)
     console.log(response);
     if (response == "ok"){
-        loginUsername = usern
-        loginPassword = pass
-        login = {"username" : loginUsername, "password" : loginPassword}
+        loginUsername = usern;
+        loginPassword = pass;
+        login = {"username" : loginUsername, "password" : loginPassword};
+        textArea.textContent = "logged on";
+    }
+    else{
+        textArea.textContent = response;   
     }
 })
 
 
-
+loginButton.addEventListener("click", async function(){
+    const usern = usernameLoginTextArea.value;
+    const pass = passwordLoginTextArea.value;
+    const data = {
+        "username" : usern,
+        "password" : pass
+    }
+    const response = await apiPost(`${url}/login`, data)
+    console.log(response);
+    if (response == "ok"){
+        loginUsername = usern;
+        loginPassword = pass;
+        login = {"username" : loginUsername, "password" : loginPassword};
+        textArea.textContent = "logged on";
+    }
+    else{
+        textArea.textContent = response;
+    }
+})
 
 
 
@@ -47,6 +75,7 @@ sendButton.addEventListener("click", async function() {
         console.log(response);
         textArea.textContent = response;
     }
+    // textArea.textContent = response;
 })
 
 

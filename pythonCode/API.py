@@ -28,6 +28,17 @@ def signup():
     return jsonify("ok")
 
 
+@app.route("/login", methods=["POST"])
+def login():
+    global Users
+    """log in to new person: {'username': 'JAMES', 'password' : '1234APcb'}"""
+    newUser = request.json
+    username = newUser["username"]
+    password = newUser["password"]
+    if username in Users:
+        return jsonify("ok")
+    return jsonify("login not found")
+
 
 
 @app.route("/get", methods=["POST"])
@@ -36,12 +47,9 @@ def getMessages():
     """Get all messages ever sent to you {'login' : {your login}"""
     data = request.json
     login = data["login"]
-
-
     error = checkForErrors(Users, login)
     if error:
         return jsonify(error)
-
     messagesToSend = messages[login["username"]]
     return jsonify({"messages" : messagesToSend})
 
