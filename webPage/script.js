@@ -1,5 +1,5 @@
 // securityles chrome: open -na "Google Chrome" --args --disable-web-security --user-data-dir="/tmp/chrome_dev"
-// https://127.0.0.1:5000 and https://torbite.pythonanywhere.com
+// http://127.0.0.1:5000 and https://torbite.pythonanywhere.com
 const url = "http://127.0.0.1:5000"
 
 const usernameSignInTextArea = document.getElementById("usernameSignIn");
@@ -15,21 +15,26 @@ const userText = document.getElementById("userText");
 const textArea = document.getElementById("text");
 const sendButton = document.getElementById("sendButton");
 const messageArea = document.getElementById("messageSpace");
-const usernameToSendTextArea = document.getElementById("usernameSend");
+// const usernameToSendTextArea = document.getElementById("usernameSend");
 
 const usernamesText = document.getElementById("usernamesText");
 
 const messagesDiv = document.getElementById("MessagesDiv");
 const getMessagesButton = document.getElementById("getMessagesButton");
-const seeMessagesTextArea = document.getElementById("usernameMessagesTextArea")
-const options = document.getElementById("options");
-getUsers();
-let usernames = []
+// const seeMessagesTextArea = document.getElementById("usernameMessagesTextArea")
+const userOptions = document.getElementById("userOptions");
+
+
+let lastUser = "";
+
+let usernames = [];
 let divIds = {};
 
 let loginUsername;
 let loginPassword;
 let login = {"username" : "None", "password" : "None"}
+
+getUsers();
 
 SignInButton.addEventListener("click", async function(){
     const usern = usernameSignInTextArea.value;
@@ -84,7 +89,7 @@ sendButton.addEventListener("click", async function() {
     // console.log("olaaaa")
     if(loginUsername){
         const sendMessage = messageArea.value;
-        const usernameToSend = usernameToSendTextArea.value;
+        const usernameToSend = lastUser;
         const data = {'message': sendMessage, "login" : login, "namePerson" : usernameToSend};
         const response = await apiPost(`${url}/send`, data);
         console.log(response);
@@ -95,6 +100,12 @@ sendButton.addEventListener("click", async function() {
 
 setInterval(checkForMessages, 1000);
 setInterval(getUsers, 10000);
+setInterval(() => {
+    if(userOptions.value != ""){
+        lastUser = userOptions.value;
+    }
+    // console.log(lastUser);
+}, 200);
 
 getMessagesButton.addEventListener("click", async function() {
     await checkForMessages();
@@ -109,20 +120,22 @@ async function getUsers(){
     usernames = response["usernames"]
     console.log(usernames)
     text = " "
-    options.innerHTML = "";
+    userOptions.innerHTML = "";
     for(var i = 0; i < usernames.length; i ++){
-        text += `\n${usernames[i]},`
+        text += `\n${usernames[i]},`;
         const option = document.createElement("option");
-        option.value = usernames[i]; // Set the value
-        option.textContent = usernames[i]; // Set the visible text
-        options.appendChild(option); // Add the option to the select element
+        option.value = usernames[i];
+        option.textContent = usernames[i];
+        userOptions.appendChild(option);
     }
     //for(var i = 0)
     usernamesText.textContent = `Usernames: ${text}`
+    
 }
 
 async function checkForMessages(){
-    const userToSend = options.value;
+    let userToSend = lastUser;
+    
     const no = "There is no pesrson with that name";
     if(login["username"] != "None"  && userToSend != ""){
 
@@ -135,12 +148,12 @@ async function checkForMessages(){
             divId = `${userToSend}Div`;
             if (!(divId in divIds)){
                 divIds[divId] = document.createElement("div");
-                divIds[divId].id = divId
+                divIds[divId].id = divId;
                 messagesDiv.appendChild(divIds[divId]);
 
             }
             // console.log(divIds.length)
-            const divOfMsgs =  divIds[divId]
+            const divOfMsgs =  divIds[divId];
             // if(!divOfMsgs){
             //     divOfMsgs = document.createElement("div");
             //     divOfMsgs.id = `${userToSend}Div`;
@@ -157,7 +170,7 @@ async function checkForMessages(){
                 }
                 
                 elm.textContent = `${user} : ${message}`;
-                elm.style.backgroundColor = "gray";
+                elm.style.backgroundColor = "White";
                 elm.style.borderWidth = 3;
                 elm.style.borderColor = "black";
                 // document.body.appendChild(elm);
@@ -168,11 +181,11 @@ async function checkForMessages(){
                 // console.log(key);
                 // console.log(divId);
                 if(key == divId){
-                    divIds[key].style.display = "block"
+                    divIds[key].style.display = "block";
                     // console.log("block");
                 }
                 else{
-                    divIds[key].style.display = "none"
+                    divIds[key].style.display = "none";
                     // console.log("none");
                 }
             });

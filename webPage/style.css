@@ -7,6 +7,10 @@ body{
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
 
+select{
+    font-size: 16;
+}
+
 textarea{
     border-color: black;
     background-color: bisque;
@@ -86,6 +90,6 @@ div{
     background-color: gainsboro;
     border-color: black;
     position: relative;
-    top: 400px;
-    left: 400px;
+    top: 450px;
+    left: 390px;
 }
