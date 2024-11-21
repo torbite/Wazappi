@@ -21,7 +21,11 @@ const usernamesText = document.getElementById("usernamesText");
 
 const messagesDiv = document.getElementById("MessagesDiv");
 const getMessagesButton = document.getElementById("getMessagesButton");
-
+const seeMessagesTextArea = document.getElementById("usernameMessagesTextArea")
+const options = document.getElementById("options");
+getUsers();
+let usernames = []
+let divIds = {};
 
 let loginUsername;
 let loginPassword;
@@ -105,28 +109,48 @@ async function getUsers(){
     usernames = response["usernames"]
     console.log(usernames)
     text = " "
-    for(var i =0; i < usernames.length; i ++){
+    options.innerHTML = "";
+    for(var i = 0; i < usernames.length; i ++){
         text += `\n${usernames[i]},`
+        const option = document.createElement("option");
+        option.value = usernames[i]; // Set the value
+        option.textContent = usernames[i]; // Set the visible text
+        options.appendChild(option); // Add the option to the select element
     }
+    //for(var i = 0)
     usernamesText.textContent = `Usernames: ${text}`
 }
 
 async function checkForMessages(){
-    const userToSend = usernameToSendTextArea.value;
+    const userToSend = options.value;
     const no = "There is no pesrson with that name";
     if(login["username"] != "None"  && userToSend != ""){
 
         const sendData = {"login" : login, 'userToReceiveChat' : userToSend};
         const response = await apiPost(`${url}/get`, sendData);
         if (response != no){
-            console.log(response);
+            // console.log(response);
             const messages = response["messages"];
             const length = messages.length;
+            divId = `${userToSend}Div`;
+            if (!(divId in divIds)){
+                divIds[divId] = document.createElement("div");
+                divIds[divId].id = divId
+                messagesDiv.appendChild(divIds[divId]);
+
+            }
+            // console.log(divIds.length)
+            const divOfMsgs =  divIds[divId]
+            // if(!divOfMsgs){
+            //     divOfMsgs = document.createElement("div");
+            //     divOfMsgs.id = `${userToSend}Div`;
+            // }
             for(let i = 0; i < length && i < 13; i++){
                 var message = messages[i]["message"];
                 var user = messages[i]["username"];
-                var id = `message${i}`;
+                var id = `${userToSend}message${i}`;
                 var elm = document.getElementById(id);
+
                 if(!elm){
                     elm = document.createElement("h3");
                     elm.id = id;
@@ -137,8 +161,21 @@ async function checkForMessages(){
                 elm.style.borderWidth = 3;
                 elm.style.borderColor = "black";
                 // document.body.appendChild(elm);
-                messagesDiv.appendChild(elm);
-            }   
+                divOfMsgs.appendChild(elm);
+            }
+
+            Object.keys(divIds).forEach(key => {
+                // console.log(key);
+                // console.log(divId);
+                if(key == divId){
+                    divIds[key].style.display = "block"
+                    // console.log("block");
+                }
+                else{
+                    divIds[key].style.display = "none"
+                    // console.log("none");
+                }
+            });
         }
     }
     return "done";
